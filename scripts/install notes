@@ -1,0 +1,82 @@
+# Installation Guide for Read Generation and Processing Scripts
+
+This guide covers the installation of all necessary tools and software for running the read generation script and the FastP processing script.
+
+## 1. Basic System Requirements
+
+- A Unix-like operating system (Linux or macOS)
+- Bash shell
+- Internet connection for downloading packages
+
+## 2. Package Managers
+
+Ensure you have one of the following package managers installed:
+
+- apt (for Ubuntu/Debian)
+- brew (for macOS)
+- conda (for any OS, recommended for easy management of bioinformatics tools)
+
+## 3. Required Software
+
+### For the Read Generation Script:
+
+1. **InSilicoSeq (iss)**
+   ```
+   pip install InSilicoSeq
+   ```
+
+2. **R**
+   - Ubuntu: `sudo apt-get install r-base`
+   - macOS: `brew install r`
+
+3. **gzip** (usually pre-installed on most Unix-like systems)
+
+### For the FastP Processing Script:
+
+1. **FastP**
+   - Using conda: `conda install -c bioconda fastp`
+   - Or follow installation instructions at: https://github.com/OpenGene/fastp
+
+2. **GNU Parallel**
+   - Ubuntu: `sudo apt-get install parallel`
+   - macOS: `brew install parallel`
+
+## 4. Additional R Packages
+
+If your `create_library.R` script requires specific R packages, install them within R:
+
+```R
+install.packages(c("package1", "package2"))
+```
+
+Replace "package1", "package2", etc., with the actual package names.
+
+## 5. Trimmomatic Adapters
+
+Download Trimmomatic adapters:
+
+```bash
+wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip
+unzip Trimmomatic-0.39.zip
+```
+
+The NexteraPE-PE.fa file will be in the `Trimmomatic-0.39/adapters/` directory.
+
+## 6. Verify Installations
+
+After installing, verify each tool is correctly installed and accessible:
+
+```bash
+iss --version
+R --version
+fastp --version
+parallel --version
+```
+
+Each command should return version information without errors.
+
+## Note
+
+Ensure all installed tools are in your system's PATH. You may need to log out and log back in or restart your terminal for PATH changes to take effect.
+
+If you encounter any issues during installation or execution of the scripts, please refer to the official documentation of each tool for troubleshooting.
