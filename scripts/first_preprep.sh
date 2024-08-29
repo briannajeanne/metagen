@@ -18,13 +18,13 @@ fi
 mkdir -p input output
 
 # Process each line in the manifest file
-while IFS=$'\t' read -r R1_PATH R2_PATH || [ -n "$R1_PATH" ]; do
+while IFS=$'\t' read -r R1_PATH R2_PATH OUTPUT_PREFIX || [ -n "$R1_PATH" ]; do
     # Skip empty lines
     [ -z "$R1_PATH" ] && continue
 
-    # Check if both R1 and R2 paths are provided
-    if [ -z "$R2_PATH" ]; then
-        echo "Error: R2 path is missing for R1: $R1_PATH"
+    # Check if all three columns are provided
+    if [ -z "$R2_PATH" ] || [ -z "$OUTPUT_PREFIX" ]; then
+        echo "Error: Missing R2 path or output prefix for R1: $R1_PATH"
         continue
     fi
 
@@ -34,18 +34,15 @@ while IFS=$'\t' read -r R1_PATH R2_PATH || [ -n "$R1_PATH" ]; do
         continue
     fi
 
-    # Get the base name for the output
-    BASE_NAME=$(basename "$R1_PATH" _R1.fastq)
-
     # Copy input files to the input directory
-    cp "$R1_PATH" "input/${BASE_NAME}_R1.fastq"
-    cp "$R2_PATH" "input/${BASE_NAME}_R2.fastq"
+    cp "$R1_PATH" "input/${OUTPUT_PREFIX}_R1.fastq"
+    cp "$R2_PATH" "input/${OUTPUT_PREFIX}_R2.fastq"
 
-    # Generate reads with iss (assuming we're using the input FASTQ files as templates)
-    iss generate --genomes "input/${BASE_NAME}_R1.fastq" "input/${BASE_NAME}_R2.fastq" \
-                 -o "output/${BASE_NAME}_reads" -n 3000 --cpus 16 --model miseq
+    # Generate reads with iss (using the input FASTQ files as templates)
+    iss generate --genomes "input/${OUTPUT_PREFIX}_R1.fastq" "input/${OUTPUT_PREFIX}_R2.fastq" \
+                 -o "output/${OUTPUT_PREFIX}_reads" -n 3000 --cpus 16 --model miseq
 
-    echo "Processed: $BASE_NAME"
+    echo "Processed: $OUTPUT_PREFIX"
 
 done < "$MANIFEST_FILE"
 
